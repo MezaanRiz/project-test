@@ -1,11 +1,8 @@
-from sqlmodel import  create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlmodel import SQLModel, create_engine, Session
 
-URL = 'sqlite:///database.db'
+sqlite_url = "sqlite:///./database2.db"
+engine = create_engine(sqlite_url, echo=True, connect_args={"check_same_thread": False})
 
-
-Sqlsession =  sessionmaker(auto_commit=False, autoflush=False, bind=engine)
-
-Base = declarative_base()
-
+def get_session():
+    with Session(engine) as session:
+        yield session
