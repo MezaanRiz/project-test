@@ -1,5 +1,8 @@
-__pychache__
 
-fastapi-env
+__pycache__/
+
+
+fastapi-env/
+
 
 .DS_Store
