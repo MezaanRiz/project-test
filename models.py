@@ -1,12 +1,26 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship
-from .database import Base
+from sqlmodel import SQLModel, Field, Session, Column, Integer, String, ForeignKey, Relationship
+from typing import List, Optional
+from sqlmodel import Session
+from enum import Enum
 
-class User(Base):
+
+
+class UserBase(SQLModel):
+
+    email: str = Field(sa_column=Column(String, unique=True, index=True))
+    first_name: Optional[str] = Field(default=None)
+    last_name: Optional[str] = Field(default=None)
+
+    
+    
+class User(UserBase, table=True):
     __tablename__ = "users"
+    id: Optional[int] = Field(default=None, primary_key=True)
 
-    id : int  = Column( primary_key=True, index=True)
-    name : str = Column( index=True, nullable=False)
-    email : str = Column ( unique=True, index=True, nullable=False)
+ 
+class UserCreate(UserBase):
+    pass
 
-    items = relationship("Item", back_populates="owner")
+class UserRead(User):
+    id: int
+

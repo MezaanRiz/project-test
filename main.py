@@ -1,22 +1,14 @@
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import JSONResponse
-from .database import  engine
-import models 
- 
+from fastapi import FastAPI
+from sqlmodel import SQLModel
+from database import engine
+from utils import users
+
+
 app = FastAPI()
 
-models.Base.metadata.create_all(bind=engine)
+def on_startup():
+    SQLModel.metadata.create_all(engine)   # creates tables on startup
 
-@app.get("/show-message")
-async def welcome_diasplay():
+app.add_event_handler("startup", on_startup)
 
-    return {"data":{ "message": "Hello World"}}
-
-@app.post("/add-user")
-def add_user(name: str, email: str):
-    return 
-
-
-@app.get("/what")
-def index():
-    return JSONResponse (content={"message": "Welcome to the API!"})
+app.include_router(users.router, prefix= "/users", tags=["Users"])
